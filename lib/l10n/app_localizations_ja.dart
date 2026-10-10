@@ -1266,4 +1266,18 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get attentionMarkSeen => '確認済みにする';
+
+  @override
+  String get pullRequest => 'プルリクエスト';
+
+  @override
+  String get openOnGitHub => 'GitHubで開く';
+
+  @override
+  String get askToMerge => 'マージを頼む';
+
+  @override
+  String askToMergeMessage(String url) {
+    return '$url のCIが通っているか確認してから、マージしてください。';
+  }
 }

@@ -2269,6 +2269,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Mark as seen'**
   String get attentionMarkSeen;
+
+  /// No description provided for @pullRequest.
+  ///
+  /// In en, this message translates to:
+  /// **'Pull request'**
+  String get pullRequest;
+
+  /// No description provided for @openOnGitHub.
+  ///
+  /// In en, this message translates to:
+  /// **'Open on GitHub'**
+  String get openOnGitHub;
+
+  /// No description provided for @askToMerge.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask to merge'**
+  String get askToMerge;
+
+  /// No description provided for @askToMergeMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Check that CI has passed on {url}, then merge it.'**
+  String askToMergeMessage(String url);
 }
 
 class _AppLocalizationsDelegate

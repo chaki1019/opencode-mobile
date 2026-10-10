@@ -143,6 +143,7 @@ class ChatScreen extends ConsumerWidget {
                                           },
                                           child: TimelineEntryView(
                                             entry: entry,
+                                            sessionId: session.id,
                                           ),
                                         )
                                       : entry is AssistantEntry &&
@@ -161,9 +162,13 @@ class ChatScreen extends ConsumerWidget {
                                           },
                                           child: TimelineEntryView(
                                             entry: entry,
+                                            sessionId: session.id,
                                           ),
                                         )
-                                      : TimelineEntryView(entry: entry);
+                                      : TimelineEntryView(
+                                          entry: entry,
+                                          sessionId: session.id,
+                                        );
                                 }
                                 return ReadableWidth(
                                   child: Padding(

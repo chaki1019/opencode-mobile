@@ -635,5 +635,16 @@
   "attentionTitle": "Needs you",
   "attentionEmpty": "Nothing needs you right now.",
   "attentionScope": "Shows the servers connected in this app: permissions and questions waiting for an answer, and replies finished in the last 3 days that nobody has looked at yet.",
-  "attentionMarkSeen": "Mark as seen"
+  "attentionMarkSeen": "Mark as seen",
+  "pullRequest": "Pull request",
+  "openOnGitHub": "Open on GitHub",
+  "askToMerge": "Ask to merge",
+  "askToMergeMessage": "Check that CI has passed on {url}, then merge it.",
+  "@askToMergeMessage": {
+    "placeholders": {
+      "url": {
+        "type": "String"
+      }
+    }
+  }
 }
