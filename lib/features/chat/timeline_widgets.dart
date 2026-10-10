@@ -15,16 +15,24 @@ import 'composer_providers.dart';
 import 'expand_downward.dart';
 import 'history_skeleton.dart';
 import 'prompt_widgets.dart';
+import 'pull_request_card.dart';
 
 class TimelineEntryView extends StatelessWidget {
-  const TimelineEntryView({super.key, required this.entry});
+  const TimelineEntryView({super.key, required this.entry, this.sessionId});
 
   final TimelineEntry entry;
+
+  /// The session the entry belongs to, for actions that write into its
+  /// input.
+  final String? sessionId;
 
   @override
   Widget build(BuildContext context) => switch (entry) {
     final UserEntry e => UserMessageBubble(entry: e),
-    final AssistantEntry e => AssistantMessageView(entry: e),
+    final AssistantEntry e => AssistantMessageView(
+      entry: e,
+      sessionId: sessionId,
+    ),
     final CompactionEntry e => CompactionView(entry: e),
     final ShellEntry e => ShellEntryView(entry: e),
     final ContextEntry e => ContextCaption(entry: e),
@@ -208,9 +216,10 @@ class PendingPromptBubble extends StatelessWidget {
 }
 
 class AssistantMessageView extends StatelessWidget {
-  const AssistantMessageView({super.key, required this.entry});
+  const AssistantMessageView({super.key, required this.entry, this.sessionId});
 
   final AssistantEntry entry;
+  final String? sessionId;
 
   @override
   Widget build(BuildContext context) {
@@ -236,6 +245,8 @@ class AssistantMessageView extends StatelessWidget {
             final ReasoningContent c => ReasoningView(text: c.text),
             final ToolContent c => ToolCallView(tool: c),
           },
+        for (final link in pullRequestsIn(entry))
+          PullRequestCard(link: link, sessionId: sessionId),
         if (entry.isStreaming && !_hasVisibleText(entry))
           const _ThinkingIndicator(),
         if (entry.errorMessage != null)

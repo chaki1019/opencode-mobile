@@ -361,5 +361,9 @@
   "attentionTitle": "要対応",
   "attentionEmpty": "対応が必要なものはありません。",
   "attentionScope": "このアプリで接続しているサーバーについて、回答を待っている許可や質問と、3日以内に終わってまだ誰も見ていない応答を表示します。",
-  "attentionMarkSeen": "確認済みにする"
+  "attentionMarkSeen": "確認済みにする",
+  "pullRequest": "プルリクエスト",
+  "openOnGitHub": "GitHubで開く",
+  "askToMerge": "マージを頼む",
+  "askToMergeMessage": "{url} のCIが通っているか確認してから、マージしてください。"
 }

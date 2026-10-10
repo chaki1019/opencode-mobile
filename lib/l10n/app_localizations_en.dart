@@ -1292,4 +1292,18 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get attentionMarkSeen => 'Mark as seen';
+
+  @override
+  String get pullRequest => 'Pull request';
+
+  @override
+  String get openOnGitHub => 'Open on GitHub';
+
+  @override
+  String get askToMerge => 'Ask to merge';
+
+  @override
+  String askToMergeMessage(String url) {
+    return 'Check that CI has passed on $url, then merge it.';
+  }
 }
