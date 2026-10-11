@@ -55,6 +55,7 @@
         <div class="nav-sub"><ul class="toc">
           <li><a href="#" aria-current="page">Overview</a></li>
           <li><a href="#server">First, start the server</a></li>
+          <li><a href="#shared">If OpenCode runs on the computer too</a></li>
           <li><a href="#wifi">On the same Wi-Fi</a></li>
           <li><a href="#tailscale">With Tailscale (works from anywhere)</a></li>
           <li><a href="#cloudflare">With Cloudflare Tunnel</a></li>
@@ -110,6 +111,18 @@
 opencode serve --hostname 0.0.0.0 --port 4096</code></pre>
 <p>In Windows PowerShell, set it with <code class="copy">$env:OPENCODE_SERVER_PASSWORD="your-password"</code> before starting. Enter the same password on the app's connect screen (leave the username as <code>opencode</code>).</p>
 <p>Without a password, anyone on the same network can control your computer. Always set one.</p>
+
+<h2 id="shared">If OpenCode runs on the computer too</h2>
+<p>OpenCode is client&ndash;server: one server owns sessions, permissions and questions (forms), and the desktop app or the <code>opencode</code> TUI is just a client that connects to it. If you use one of those on the computer and also start a separate <code>opencode serve</code>, you end up with two servers. Questions and permissions raised on the computer then <strong>never appear on your phone</strong> (and the other way around). Message history is shared, so it looks like it works, which makes this easy to miss.</p>
+<p>In that case, don't run <code>opencode serve</code>. Expose the shared server (background service) the computer already uses instead:</p>
+<pre><code>opencode service set hostname 0.0.0.0
+opencode service restart
+opencode service status   # shows http://0.0.0.0:4096 when it worked</code></pre>
+<p>Pinning the port to 4096 keeps the app's automatic discovery and <code>http://192.168.1.10:4096</code> working:</p>
+<pre><code>opencode service set port 4096
+opencode service restart</code></pre>
+<p>A password is set for you. Read it with <code class="copy">opencode service get password</code> and enter it in the app (this is different from the password you choose for <code>opencode serve</code>).</p>
+<p>The <code>opencode serve</code> step above is for using that server alone (no desktop app or TUI on the computer). Either way, check the state with <code class="copy">opencode service status</code> and restart it with <code class="copy">opencode service restart</code>.</p>
 
 <h2 id="wifi">On the same Wi-Fi</h2>
 <p>The simplest way, when your phone and computer share a Wi-Fi network.</p>
