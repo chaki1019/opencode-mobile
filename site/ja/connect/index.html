@@ -55,6 +55,7 @@
         <div class="nav-sub"><ul class="toc">
           <li><a href="#" aria-current="page">概要</a></li>
           <li><a href="#server">まず、サーバーを起動する</a></li>
+          <li><a href="#shared">パソコンでも OpenCode を使っている場合</a></li>
           <li><a href="#wifi">同じ Wi-Fi でつなぐ</a></li>
           <li><a href="#tailscale">Tailscale でつなぐ（外出先からも使える）</a></li>
           <li><a href="#cloudflare">Cloudflare Tunnel でつなぐ</a></li>
@@ -110,6 +111,18 @@
 opencode serve --hostname 0.0.0.0 --port 4096</code></pre>
 <p>Windows の PowerShell では <code class="copy">$env:OPENCODE_SERVER_PASSWORD="好きなパスワード"</code> で設定してから起動します。アプリの接続画面には、ここで決めたパスワードを入力します（ユーザー名は <code>opencode</code> のままで構いません）。</p>
 <p>パスワードなしで起動すると、同じネットワークにいる誰でもあなたの PC を操作できてしまいます。必ず設定してください。</p>
+
+<h2 id="shared">パソコンでも OpenCode を使っている場合</h2>
+<p>OpenCode はクライアント・サーバー構成です。セッション・権限・質問（フォーム）は「1 つのサーバー」が持ち、デスクトップアプリや <code>opencode</code>（TUI）はそこに接続するクライアントです。パソコンでも使っているときに別の <code>opencode serve</code> を起動するとサーバーが 2 つになり、<strong>パソコン側で出た質問や権限がスマートフォンに出ない</strong>（逆も同じ）という食い違いが起きます。メッセージ履歴だけは共有されるので、動いているように見えて気づきにくいのが厄介な点です。</p>
+<p>この場合は <code>opencode serve</code> ではなく、パソコンがすでに使っている<strong>共有サーバー（background service）を外部に公開</strong>してください。</p>
+<pre><code>opencode service set hostname 0.0.0.0
+opencode service restart
+opencode service status   # http://0.0.0.0:4096 のように表示されれば OK</code></pre>
+<p>ポートを 4096 に固定すると、アプリの自動検出や <code>http://192.168.1.10:4096</code> の入力がそのまま使えます。</p>
+<pre><code>opencode service set port 4096
+opencode service restart</code></pre>
+<p>パスワードは自動で設定されています。<code class="copy">opencode service get password</code> で確認し、アプリに入力してください（<code>opencode serve</code> のときに自分で決めるパスワードとは別です）。</p>
+<p>上の「まず、サーバーを起動する」の <code>opencode serve</code> は、そのサーバーだけを使う（パソコンでデスクトップアプリや TUI を使わない）場合の手順です。どちらの場合も、あとから <code class="copy">opencode service status</code> で状態を、<code class="copy">opencode service restart</code> で再起動を確認できます。</p>
 
 <h2 id="wifi">同じ Wi-Fi でつなぐ</h2>
 <p>スマートフォンと PC が同じ Wi-Fi にあるときの、いちばん簡単な方法です。</p>
