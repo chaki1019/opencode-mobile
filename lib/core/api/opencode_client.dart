@@ -185,17 +185,22 @@ class OpenCodeClient {
     );
   }
 
-  /// Root sessions of a project directory, newest first.
+  /// Root sessions of a project, newest first. When [projectId] names a
+  /// server project (not the synthetic `global`), sessions are listed by
+  /// project, so sessions the agent started in a worktree or sandbox are
+  /// included; otherwise they are scoped by [directory].
   Future<Page<Session>> listSessions({
     required String directory,
+    String? projectId,
     String? cursor,
     int limit = 50,
   }) async {
+    final scoped = projectId != null && projectId != 'global';
     final page = await _getPage(
       '/api/session',
       cursor == null
           ? {
-              'directory': directory,
+              if (scoped) 'project': projectId else 'directory': directory,
               'parentID': 'null',
               'order': 'desc',
               'limit': limit,

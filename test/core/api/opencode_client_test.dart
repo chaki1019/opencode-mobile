@@ -297,6 +297,38 @@ void main() {
           .listSessions(directory: '/d', limit: 1);
       expect(page.hasMore, isFalse);
     });
+
+    test('lists by project so worktree sessions are included', () async {
+      final adapter = FakeAdapter({
+        '/api/session': FakeRoute.json({
+          'data': [session('a')],
+        }),
+      });
+      await clientFor(adapter)
+          .listSessions(directory: '/srv/p1', projectId: 'pid');
+      expect(adapter.requests.single.queryParameters, {
+        'project': 'pid',
+        'parentID': 'null',
+        'order': 'desc',
+        'limit': 50,
+      });
+    });
+
+    test('falls back to the directory for the global project', () async {
+      final adapter = FakeAdapter({
+        '/api/session': FakeRoute.json({
+          'data': [session('a')],
+        }),
+      });
+      await clientFor(adapter)
+          .listSessions(directory: '/srv/p1', projectId: 'global');
+      expect(adapter.requests.single.queryParameters, {
+        'directory': '/srv/p1',
+        'parentID': 'null',
+        'order': 'desc',
+        'limit': 50,
+      });
+    });
   });
 
   group('listMessages', () {

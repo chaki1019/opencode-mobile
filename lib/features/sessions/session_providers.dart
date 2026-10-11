@@ -30,6 +30,7 @@ class SessionListNotifier extends PagedNotifier<Session> {
     if (client == null) return const Page([], null);
     final page = await client.listSessions(
       directory: project.directory,
+      projectId: project.id,
       cursor: cursor,
     );
     return Page(
@@ -86,9 +87,12 @@ class SessionListNotifier extends PagedNotifier<Session> {
         final directory = location is Map
             ? location['directory'] as String?
             : event.directory;
-        if (index >= 0 ||
-            directory != project.directory ||
-            data['parentID'] != null) {
+        // Sessions in a project's worktrees keep the project ID but a
+        // different directory, so match on the project when we have one.
+        final sameProject = project.id == 'global'
+            ? directory == project.directory
+            : data['projectID'] == project.id;
+        if (index >= 0 || !sameProject || data['parentID'] != null) {
           return;
         }
         updated = [
