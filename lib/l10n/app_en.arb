@@ -134,6 +134,27 @@
       "error": {}
     }
   },
+  "sessionTarget": "Run session in",
+  "sessionTargetLocal": "Local repository",
+  "sessionTargetNewWorkspace": "New workspace",
+  "sessionTargetNewWorkspaceHint": "Its own checkout, so the local repository stays untouched",
+  "sessionTargetWorktrees": "Worktrees",
+  "sessionTargetFromBranch": "From {branch}",
+  "@sessionTargetFromBranch": {
+    "placeholders": {
+      "branch": {}
+    }
+  },
+  "sessionTargetChangeBranch": "Choose the branch to start from",
+  "branchSearch": "Search branches",
+  "branchSearchEmpty": "No matching branches",
+  "worktreeCreating": "Creating the worktree…",
+  "worktreeCreateFailed": "Couldn't create the worktree: {error}",
+  "@worktreeCreateFailed": {
+    "placeholders": {
+      "error": {}
+    }
+  },
   "untitledSession": "Untitled session",
   "rename": "Rename",
   "compact": "Summarize conversation",

@@ -271,6 +271,44 @@ class AppLocalizationsJa extends AppLocalizations {
   }
 
   @override
+  String get sessionTarget => 'セッションの実行先';
+
+  @override
+  String get sessionTargetLocal => 'ローカルリポジトリ';
+
+  @override
+  String get sessionTargetNewWorkspace => '新しいワークスペース';
+
+  @override
+  String get sessionTargetNewWorkspaceHint =>
+      '専用のチェックアウトを作るので、ローカルリポジトリに干渉しません';
+
+  @override
+  String get sessionTargetWorktrees => 'ワークツリー';
+
+  @override
+  String sessionTargetFromBranch(Object branch) {
+    return '$branchから';
+  }
+
+  @override
+  String get sessionTargetChangeBranch => '元にするブランチを選ぶ';
+
+  @override
+  String get branchSearch => 'ブランチを検索';
+
+  @override
+  String get branchSearchEmpty => '一致するブランチがありません';
+
+  @override
+  String get worktreeCreating => 'ワークツリーを作成中…';
+
+  @override
+  String worktreeCreateFailed(Object error) {
+    return 'ワークツリーを作成できませんでした: $error';
+  }
+
+  @override
   String get untitledSession => '無題のセッション';
 
   @override

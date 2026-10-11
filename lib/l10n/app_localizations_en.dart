@@ -277,6 +277,44 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get sessionTarget => 'Run session in';
+
+  @override
+  String get sessionTargetLocal => 'Local repository';
+
+  @override
+  String get sessionTargetNewWorkspace => 'New workspace';
+
+  @override
+  String get sessionTargetNewWorkspaceHint =>
+      'Its own checkout, so the local repository stays untouched';
+
+  @override
+  String get sessionTargetWorktrees => 'Worktrees';
+
+  @override
+  String sessionTargetFromBranch(Object branch) {
+    return 'From $branch';
+  }
+
+  @override
+  String get sessionTargetChangeBranch => 'Choose the branch to start from';
+
+  @override
+  String get branchSearch => 'Search branches';
+
+  @override
+  String get branchSearchEmpty => 'No matching branches';
+
+  @override
+  String get worktreeCreating => 'Creating the worktree…';
+
+  @override
+  String worktreeCreateFailed(Object error) {
+    return 'Couldn\'t create the worktree: $error';
+  }
+
+  @override
   String get untitledSession => 'Untitled session';
 
   @override

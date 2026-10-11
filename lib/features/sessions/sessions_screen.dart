@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -8,6 +10,7 @@ import '../../core/models/project.dart';
 import '../../core/models/session.dart';
 import '../../core/paging.dart';
 import '../../core/api/api_errors.dart';
+import '../../core/api/opencode_client.dart';
 import '../../l10n/l10n.dart';
 import '../ads/ad_widgets.dart';
 import '../attention/attention_providers.dart';
@@ -19,6 +22,7 @@ import '../live/live_widgets.dart';
 import '../projects/project_tools.dart';
 import '../settings/haptics.dart';
 import 'session_providers.dart';
+import 'session_target_sheet.dart';
 
 class SessionsScreen extends ConsumerWidget {
   const SessionsScreen({super.key, required this.project, this.pane = false});
@@ -99,13 +103,76 @@ class SessionsScreen extends ConsumerWidget {
     final l10n = context.l10n;
     final router = GoRouter.of(context);
     final panes = ref.read(paneSelectionProvider.notifier);
+    var directory = project.directory;
+    if (offersSessionTargets(project)) {
+      final target = await SessionTargetSheet.show(context, project);
+      if (target == null || !context.mounted) return;
+      switch (target) {
+        case LocalTarget():
+          break;
+        case WorktreeTarget(directory: final worktree):
+          directory = worktree;
+        case NewWorkspaceTarget(:final branch):
+          final created = await _createWorktree(context, client, branch);
+          if (created == null) return;
+          directory = created;
+      }
+    }
     try {
-      final session = await client.createSession(directory: project.directory);
+      final session = await client.createSession(directory: directory);
       openSession(router, panes, session);
     } on OpenCodeApiException catch (e) {
       messenger.showSnackBar(
         SnackBar(content: Text(l10n.sessionCreateFailed(e))),
       );
+    }
+  }
+
+  /// Creates a worktree behind a progress dialog, since the server also
+  /// runs the project's setup script. Null when it failed.
+  Future<String?> _createWorktree(
+    BuildContext context,
+    OpenCodeClient client,
+    String? branch,
+  ) async {
+    final messenger = ScaffoldMessenger.of(context);
+    final l10n = context.l10n;
+    final navigator = Navigator.of(context, rootNavigator: true);
+    unawaited(
+      showDialog<void>(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => PopScope(
+          canPop: false,
+          child: AlertDialog(
+            key: const Key('worktree-creating'),
+            content: Row(
+              children: [
+                const SizedBox.square(
+                  dimension: 24,
+                  child: CircularProgressIndicator(strokeWidth: 3),
+                ),
+                const SizedBox(width: 20),
+                Expanded(child: Text(l10n.worktreeCreating)),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+    try {
+      return await client.createWorktree(
+        project.id,
+        from: project.directory,
+        branch: branch,
+      );
+    } on OpenCodeApiException catch (e) {
+      messenger.showSnackBar(
+        SnackBar(content: Text(l10n.worktreeCreateFailed(e))),
+      );
+      return null;
+    } finally {
+      navigator.pop();
     }
   }
 }
@@ -189,7 +256,12 @@ class _SessionTile extends ConsumerWidget {
       )),
     );
     final attention = ref.watch(sessionAttentionProvider(session.id));
+    final directory = session.location.directory;
     final details = [
+      // Sessions outside the local repository say which worktree they use.
+      if (directory != project.directory &&
+          !directory.startsWith('${project.directory}/'))
+        worktreeName(directory),
       relativeTime(context.l10n, session.updatedAt),
       if (session.model != null) session.model!.label,
       if (session.cost case final cost? when cost > 0) formatCost(cost),

@@ -415,6 +415,28 @@ class OpenCodeClient {
     );
   }
 
+  /// Local and remote branch names at [directory], filtered by [search].
+  Future<List<String>> vcsBranches({
+    required String directory,
+    String search = '',
+    int limit = 50,
+  }) async {
+    final body = _map(
+      await _getJson(
+        '/api/vcs/branch',
+        query: {
+          ..._location(directory),
+          if (search.trim().isNotEmpty) 'search': search.trim(),
+          'limit': limit,
+        },
+      ),
+    );
+    return [
+      for (final name in body['data'] as List? ?? const [])
+        if (name is String) name,
+    ];
+  }
+
   Future<List<FileChange>> vcsStatus({required String directory}) =>
       _fileChanges('/api/vcs/status', _location(directory));
 
@@ -568,15 +590,27 @@ class OpenCodeClient {
   }
 
   /// Creates a worktree and returns its directory. The server picks the
-  /// parent folder and, without [name], the folder name.
-  Future<String> createWorktree(String projectId, {String? name}) async {
+  /// parent folder and, without [name], the folder name. The checkout is
+  /// detached at [branch] (the source's HEAD without it), copied from
+  /// [from] (the project's own checkout without it). The server runs the
+  /// project's setup script before answering, so this may take a while.
+  Future<String> createWorktree(
+    String projectId, {
+    String? name,
+    String? from,
+    String? branch,
+  }) async {
     final body = _map(
       await _sendJson(
         '/api/worktree',
         body: {
           'projectID': projectId,
+          'from': ?from,
+          if (branch != null && branch.trim().isNotEmpty)
+            'branch': branch.trim(),
           if (name != null && name.trim().isNotEmpty) 'name': name.trim(),
         },
+        receiveTimeout: const Duration(minutes: 5),
       ),
     );
     return body['directory'] as String;
