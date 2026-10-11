@@ -536,6 +536,72 @@ abstract class AppLocalizations {
   /// **'Couldn\'t create a session: {error}'**
   String sessionCreateFailed(Object error);
 
+  /// No description provided for @sessionTarget.
+  ///
+  /// In en, this message translates to:
+  /// **'Run session in'**
+  String get sessionTarget;
+
+  /// No description provided for @sessionTargetLocal.
+  ///
+  /// In en, this message translates to:
+  /// **'Local repository'**
+  String get sessionTargetLocal;
+
+  /// No description provided for @sessionTargetNewWorkspace.
+  ///
+  /// In en, this message translates to:
+  /// **'New workspace'**
+  String get sessionTargetNewWorkspace;
+
+  /// No description provided for @sessionTargetNewWorkspaceHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Its own checkout, so the local repository stays untouched'**
+  String get sessionTargetNewWorkspaceHint;
+
+  /// No description provided for @sessionTargetWorktrees.
+  ///
+  /// In en, this message translates to:
+  /// **'Worktrees'**
+  String get sessionTargetWorktrees;
+
+  /// No description provided for @sessionTargetFromBranch.
+  ///
+  /// In en, this message translates to:
+  /// **'From {branch}'**
+  String sessionTargetFromBranch(Object branch);
+
+  /// No description provided for @sessionTargetChangeBranch.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose the branch to start from'**
+  String get sessionTargetChangeBranch;
+
+  /// No description provided for @branchSearch.
+  ///
+  /// In en, this message translates to:
+  /// **'Search branches'**
+  String get branchSearch;
+
+  /// No description provided for @branchSearchEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No matching branches'**
+  String get branchSearchEmpty;
+
+  /// No description provided for @worktreeCreating.
+  ///
+  /// In en, this message translates to:
+  /// **'Creating the worktree…'**
+  String get worktreeCreating;
+
+  /// No description provided for @worktreeCreateFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t create the worktree: {error}'**
+  String worktreeCreateFailed(Object error);
+
   /// No description provided for @untitledSession.
   ///
   /// In en, this message translates to:

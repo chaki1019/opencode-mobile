@@ -839,6 +839,24 @@ void main() {
       expect(image.text, isNull);
     });
 
+    test('lists branches at a location', () async {
+      final adapter = FakeAdapter({
+        '/api/vcs/branch': FakeRoute.json({
+          'data': ['main', 'origin/dev'],
+          'location': {'directory': '/repo'},
+        }),
+      });
+      expect(
+        await clientFor(adapter).vcsBranches(directory: '/repo', search: 'd'),
+        ['main', 'origin/dev'],
+      );
+      expect(adapter.requests.last.queryParameters, {
+        'location[directory]': '/repo',
+        'search': 'd',
+        'limit': 50,
+      });
+    });
+
     test('lists, creates and removes worktrees', () async {
       final removals = <Map<String, dynamic>>[];
       final adapter = FakeAdapter({
@@ -882,6 +900,13 @@ void main() {
       expect(jsonDecode(adapter.requests.last.data as String), {
         'projectID': 'proj',
         'name': 'topic',
+      });
+
+      await client.createWorktree('proj', from: '/repo', branch: 'dev');
+      expect(jsonDecode(adapter.requests.last.data as String), {
+        'projectID': 'proj',
+        'from': '/repo',
+        'branch': 'dev',
       });
 
       await expectLater(
